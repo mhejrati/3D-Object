@@ -61,7 +61,6 @@ catch
   [jointmodel,new_pos] = buildmodel(model, pos, deformation_feat, ...
          local_ids, global_ids, tree_structs, local_visibility, ...
          experiment_name,experiment_name_suffix);
-  %  visualizemodel2(jointmodel,global_ids(i),valid_combs(i,:));
   model = train(cls,jointmodel,new_pos,neg,0,1);
   save([cachedir cls],'model');
 end
