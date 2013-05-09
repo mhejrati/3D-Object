@@ -5,6 +5,7 @@ addpath evaluation;
 addpath sfm;
 addpath visualization;
 addpath data;
+addpath dev;
 
 % directory for caching models, intermediate data, and results
 cachedir = 'cache/';
