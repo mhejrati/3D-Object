@@ -11,8 +11,8 @@ compile
 
 % ---------------
 % Specify the model settings
-n_local_mixture = 5;            % Number of filters per part
-n_global_mixture = 50;          % Number of global mixtures for model
+n_local_mixture = 1;            % Number of filters per part
+n_global_mixture = 1;          % Number of global mixtures for model
 n_3d_basis = 5;                 % Number of 3D basis shapes
 hog_sbin = 4;
 experiment_name = '3DCars';     % Used to name temp files and results
