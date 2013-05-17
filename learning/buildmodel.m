@@ -83,7 +83,6 @@ function [jointmodel,new_pos] = buildmodel(model, pos, deformation_feat, ...
     
     % compute the parent vector and the order of parts for each tree
     % structure
-    %[n_child,n_pa,pa] = dfs(tree_structs.pa{i}); %%% Should be removed
     [orig_child_vector,orig_pa_vector,new_pa_vector] = dfs(tree_structs.pa{i});
     % add children
     for p = 1:n_parts
@@ -168,14 +167,6 @@ function [jointmodel,new_pos] = buildmodel(model, pos, deformation_feat, ...
 
   end   % loop over global mixtures
 
-%   for i = 1:length(pos)
-%       gi = global_mixture_ids(i);
-%       [n_child,n_pa,pa] = dfs(tree_structs.pa{gi});
-%       for p = 1:n_parts
-%           valid_combs(i,p) = find(global_mixture_valid_combs{gi,n_child(p)} == mix(i,n_child(p)));
-%           assert(valid_combs(i,p)<=length(jointmodel.components{gi}(p).filterid))
-%       end
-%   end
 
   % prepare positives
   bbox_zero = struct('bbox',[],'skip',true);
@@ -186,8 +177,6 @@ function [jointmodel,new_pos] = buildmodel(model, pos, deformation_feat, ...
 
   new_pos = pos;
   for i = 1:length(pos)
-    %new_pos(i) = pos(i);
-%     fin_pos(i).im = pos(i).im;
     tbbox = bbox_zero;
     for p = 1:length(pos(i).x1)
       filter_id = filter_ids(p,mix(i,p));
@@ -195,7 +184,4 @@ function [jointmodel,new_pos] = buildmodel(model, pos, deformation_feat, ...
       tbbox(filter_id).skip = false;
     end
     new_pos(i).part_boxes = tbbox;
-%     fin_pos(i).box = pos(i).box;   %%% Should be investigated
-%     fin_pos(i).point = pos(i).point;
-%     fin_pos(i).part_size = pos(i).part_size;
   end

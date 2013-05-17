@@ -1,8 +1,11 @@
-% [boxes,model,ex] = detect_fast(im, model, thresh)
+% [boxes,model] = detect_fast(im, model, thresh)
 % Detect objects in image using a model and a score threshold.
 % Higher threshold leads to fewer detections.
 
-function detections = detect_fast(im, model, thresh)
+function detections = detect_fast(im, model, thresh, just_max)
+  if nargin < 4
+    just_max = false;
+  end
   % Compute the feature pyramid and prepare filter
   pyra     = featpyramid(im,model);
   interval = model.interval;
@@ -10,7 +13,7 @@ function detections = detect_fast(im, model, thresh)
 
   % Cache various statistics derived from model
   [components,filters,resp] = modelcomponents(model,pyra);
-  max_detection_num = 10000000;
+  max_detection_num = 100000;
   detections = struct('filterid',num2cell(zeros(max_detection_num,1)),'part_boxes',{0},'component',{0},'score',{0});
   cnt        = 0;
 
@@ -44,22 +47,49 @@ function detections = detect_fast(im, model, thresh)
       % Add bias to root score
       parts(1).score = parts(1).score + parts(1).b;
       [rscore Ik]    = max(parts(1).score,[],3);
-
-      [Y,X] = find(rscore >= thresh);
-      % Walk back down tree following pointers
-      % (DEBUG) Assert extracted feature re-produces score
-      for i = 1:length(X)
-        x = X(i);
-        y = Y(i);
-        k = Ik(y,x);
-        [box,filterids] = backtrack( x , y , k, parts , pyra);
-        cnt = cnt + 1;
-        assert(cnt<max_detection_num);
-        detections(cnt).part_boxes = box;
-        detections(cnt).filterid = filterids;
-        detections(cnt).component = c;
-        detections(cnt).score = rscore(y,x);
+      
+      % If just_max=True then just consider local maxima scores
+      if just_max
+        h = fspecial('gaussian', 4, 4);
+        [Y,X] = find(imregionalmax(imfilter(rscore,h,'same'),8) & (rscore >= thresh));
+      else
+        [Y,X] = find(rscore >= thresh);
       end
+      
+      if length(X) > 0,
+        I   = (X-1)*size(rscore,1) + Y;
+        box = backtrack(X,Y,Ik(I),parts,pyra);
+        for i = 1:length(X)
+          cnt = cnt + 1;
+          if cnt>length(detections)
+            detections(cnt+max_detection_num) = detections(1);
+          end
+          tmp_box = reshape(box(i,setdiff([1:size(box,2)],[5:5:size(box,2)])),[4,size(box,2)/5]);
+          tmp_ids = box(i,[5:5:size(box,2)]);
+          detections(cnt).part_boxes = tmp_box';
+          detections(cnt).filterid = tmp_ids;
+          detections(cnt).component = c;
+          detections(cnt).score = rscore(I(i));
+        end
+        fprintf('%d detection processed at level=%d and c=%d \n',cnt,rlevel,c);
+      end
+      
+%       % Walk back down tree following pointers
+%       for i = 1:length(X)
+%         x = X(i);
+%         y = Y(i);
+%         k = Ik(y,x);
+%         [box,filterids] = backtrack( x , y , k, parts , pyra);
+%         cnt = cnt + 1;
+%         if cnt>length(detections)
+%           detections(cnt+max_detection_num) = detections(1);
+%         end
+%         assert(cnt<=length(detections));
+%         detections(cnt).part_boxes = box;
+%         detections(cnt).filterid = filterids;
+%         detections(cnt).component = c;
+%         detections(cnt).score = rscore(y,x);
+%       end
     end
   end
 
@@ -91,6 +121,11 @@ function [components,filters,resp] = modelcomponents(model,pyra)
         x = model.filters(p.filterid(f));
         [p.sizy(f) p.sizx(f) foo] = size(x.w);
         p.filterI(f) = x.i;
+      end
+      if length(p.filterid)>1
+        p.sizy = p.sizy';
+        p.sizx = p.sizx';
+        p.filterid = p.filterid';
       end
       
       for par_id = 1:size(p.defid,1)
@@ -153,83 +188,70 @@ function [score,Ix,Iy,Ik] = passmsg(child,parent)
     Ik(:,:,l)    = I;
   end
 
-% Backtrack through dynamic programming messages to estimate part locations
-% and the associated feature vector  
-function [box,filterids] = backtrack(x,y,mix,parts,pyra)
+% % Backtrack through dynamic programming messages to estimate part locations
+% % and the associated feature vector  
+% function [box,filterids] = backtrack(x,y,mix,parts,pyra)
+%   numparts = length(parts);
+%   ptr = zeros(numparts,3);
+%   box = zeros(numparts,4);
+%   k   = 1;
+%   p   = parts(k);
+%   ptr(k,:) = [x y mix];
+%   scale = pyra.scale(p.level);
+%   x1  = (x - 1 - pyra.padx)*scale+1;
+%   y1  = (y - 1 - pyra.pady)*scale+1;
+%   x2  = x1 + p.sizx(mix)*scale - 1;
+%   y2  = y1 + p.sizy(mix)*scale - 1;
+%   box(k,:) = [x1 y1 x2 y2];
+%   filterids(k) = parts(k).filterid(ptr(k,3));
+%   for k = 2:numparts,
+%     p   = parts(k);
+%     par = p.parent;
+%     x   = ptr(par,1);
+%     y   = ptr(par,2);
+%     mix = ptr(par,3);
+%     ptr(k,1) = p.Ix(y,x,mix);
+%     ptr(k,2) = p.Iy(y,x,mix);
+%     ptr(k,3) = p.Ik(y,x,mix);
+%     scale = pyra.scale(p.level);
+%     x1  = (ptr(k,1) - 1 - pyra.padx)*scale+1;
+%     y1  = (ptr(k,2) - 1 - pyra.pady)*scale+1;
+%     x2  = x1 + p.sizx(ptr(k,3))*scale - 1;
+%     y2  = y1 + p.sizy(ptr(k,3))*scale - 1;
+%     box(k,:) = [x1 y1 x2 y2];
+%     filterids(k) = parts(k).filterid(ptr(k,3));
+%   end
+  
+  
+  % Backtrack through DP msgs to collect ptrs to part locations
+function box = backtrack(x,y,mix,parts,pyra)
+  numx     = length(x);
   numparts = length(parts);
-  ptr = zeros(numparts,3);
-  box = zeros(numparts,4);
-  k   = 1;
-  p   = parts(k);
-  ptr(k,:) = [x y mix];
-  scale = pyra.scale(p.level);
-  x1  = (x - 1 - pyra.padx)*scale+1;
-  y1  = (y - 1 - pyra.pady)*scale+1;
-  x2  = x1 + p.sizx(mix)*scale - 1;
-  y2  = y1 + p.sizy(mix)*scale - 1;
-  box(k,:) = [x1 y1 x2 y2];
-  filterids(k) = parts(k).filterid(ptr(k,3));
-  for k = 2:numparts,
+  
+  xptr = zeros(numx,numparts);
+  yptr = zeros(numx,numparts);
+  mptr = zeros(numx,numparts);
+  box  = zeros(numx,5,numparts);
+
+  for k = 1:numparts,
     p   = parts(k);
-    par = p.parent;
-    x   = ptr(par,1);
-    y   = ptr(par,2);
-    mix = ptr(par,3);
-    ptr(k,1) = p.Ix(y,x,mix);
-    ptr(k,2) = p.Iy(y,x,mix);
-    ptr(k,3) = p.Ik(y,x,mix);
+    if k == 1,
+      xptr(:,k) = x;
+      yptr(:,k) = y;
+      mptr(:,k) = mix;
+    else
+      par = p.parent;
+      [h,w,dummy] = size(p.Ix);
+      I   = (mptr(:,par)-1)*h*w + (xptr(:,par)-1)*h + yptr(:,par);
+      xptr(:,k) = p.Ix(I);
+      yptr(:,k) = p.Iy(I);
+      mptr(:,k) = p.Ik(I);
+    end
     scale = pyra.scale(p.level);
-    x1  = (ptr(k,1) - 1 - pyra.padx)*scale+1;
-    y1  = (ptr(k,2) - 1 - pyra.pady)*scale+1;
-    x2  = x1 + p.sizx(ptr(k,3))*scale - 1;
-    y2  = y1 + p.sizy(ptr(k,3))*scale - 1;
-    box(k,:) = [x1 y1 x2 y2];
-    filterids(k) = parts(k).filterid(ptr(k,3));
+    x1 = (xptr(:,k) - 1 - pyra.padx)*scale+1;
+    y1 = (yptr(:,k) - 1 - pyra.pady)*scale+1;
+    x2 = x1 + p.sizx(mptr(:,k))*scale - 1;
+    y2 = y1 + p.sizy(mptr(:,k))*scale - 1;
+    box(:,:,k) = [x1 y1 x2 y2 p.filterid(mptr(:,k))];
   end
-
-% Compute the deformation feature given parent locations, 
-% child locations, and the child part
-function res = defvector(px,py,x,y,mix,par_mix,part)
-  probex = ( (px-1)*part.step + part.startx(par_mix,mix) );
-  probey = ( (py-1)*part.step + part.starty(par_mix,mix) );
-  dx  = probex - x;
-  dy  = probey - y;
-  res = -[dx^2 dx dy^2 dy]';
-
-% Compute a mask of filter reponse locations (for a filter of size sizy,sizx)
-% that sufficiently overlap a ground-truth bounding box (bbox) 
-% at a particular level in a feature pyramid
-function ov = testoverlap(sizx,sizy,pyra,level,bbox,overlap)
-  scale = pyra.scale(level);
-  padx  = pyra.padx;
-  pady  = pyra.pady;
-  [dimy,dimx,foo] = size(pyra.feat{level});
-  
-  bx1 = bbox(1);
-  by1 = bbox(2);
-  bx2 = bbox(3);
-  by2 = bbox(4);
-  
-  % Index windows evaluated by filter (in image coordinates)
-  x1 = ((1:dimx-sizx+1) - padx - 1)*scale + 1;
-  y1 = ((1:dimy-sizy+1) - pady - 1)*scale + 1;
-  x2 = x1 + sizx*scale - 1;
-  y2 = y1 + sizy*scale - 1;
-  
-  % Compute intersection with bbox
-  xx1 = max(x1,bx1);
-  xx2 = min(x2,bx2);
-  yy1 = max(y1,by1);
-  yy2 = min(y2,by2);
-  w   = xx2 - xx1 + 1;
-  h   = yy2 - yy1 + 1;
-  w(w<0) = 0;
-  h(h<0) = 0;
-  inter  = h'*w;
-  
-  % area of (possibly clipped) detection windows and original bbox
-  area = (y2-y1+1)'*(x2-x1+1);
-  box  = (by2-by1+1)*(bx2-bx1+1);
-  
-  % thresholded overlap
-  ov   = inter ./ (area + box - inter) > overlap;
+  box = reshape(box,numx,5*numparts);

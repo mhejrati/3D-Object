@@ -11,8 +11,8 @@ compile
 
 % ---------------
 % Specify the model settings
-n_local_mixture = 1;            % Number of filters per part
-n_global_mixture = 1;          % Number of global mixtures for model
+n_local_mixture = 3;            % Number of filters per part
+n_global_mixture = 10;          % Number of global mixtures for model
 n_3d_basis = 5;                 % Number of 3D basis shapes
 hog_sbin = 4;
 experiment_name = '3DCars';     % Used to name temp files and results
@@ -71,7 +71,7 @@ visualize_3D_basis_shapes(model_3d, wireframe)
 % ---------------
 % Testing
 model_2d.thresh = -1;
-detections = test_model(model_2d, model_3d, test, experiment_name, experiment_name_suffix);
+test_model(model_2d, model_3d, test, experiment_name, experiment_name_suffix);
 
 
 % ---------------
@@ -79,7 +79,7 @@ detections = test_model(model_2d, model_3d, test, experiment_name, experiment_na
 
 % Evaluate 2D bounding bounding box detection using VOC PASCAL object
 % detection challenge method
-[ap precision recall] = evaluate_2D_box_detection(test,model,detections,experiment_name);
+result = evaluate_2D_box_detection(test, experiment_name, experiment_name_suffix);
 
 % Evaluate 2D landmark localization and visibility prediction
 

@@ -1,4 +1,4 @@
-function detections = test_model(model_2d, model_3d, test, ...
+function test_model(model_2d, model_3d, test, ...
                                     experiment_name, experiment_name_suffix)
   
   globals;
@@ -16,7 +16,7 @@ function detections = test_model(model_2d, model_3d, test, ...
         my_save(fullfile(dir_name, [num2str(i) '_boxes.mat']),detection);
       end
     end
-    detections = aggregate_detections(dir_name, n_test);
+%    detections = aggregate_detections(dir_name, n_test);
   end
 
 % Because Matlab is Dumb :D  

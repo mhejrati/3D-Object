@@ -44,7 +44,7 @@ end
 
 % Cache various statistics derived from model
 [components,filters,resp] = modelcomponents(model,pyra);
-max_detection_num = 2000000;
+max_detection_num = 100000;
 detections = struct('filterid',num2cell(zeros(max_detection_num,1)),'part_boxes',{0},'component',{0},'score',{0});
 ex.blocks  = [];
 ex.id      = [label id 0 0 0];
@@ -128,7 +128,10 @@ for rlevel = levels,
       k = Ik(y,x);
       [box,ex,filterids] = backtrack( x , y , k, parts , pyra , ex , latent || write);
       cnt = cnt + 1;
-      assert(cnt<max_detection_num);
+      if cnt>length(detections)
+        detections(cnt+max_detection_num) = detections(1);
+      end
+      assert(cnt<=length(detections));
       detections(cnt).part_boxes = box;
       detections(cnt).filterid = filterids;
       detections(cnt).component = c;

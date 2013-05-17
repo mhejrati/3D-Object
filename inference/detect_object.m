@@ -6,7 +6,7 @@ function detections = detect_object(im, model_2d, model_3d, thresh_2d)
   part_names = model_3d.part_names;
   
   % run 2D detector
-  detections = detect_fast(im, model_2d, thresh_2d);
+  detections = detect_fast(im, model_2d, thresh_2d, true);
   
   % compute 2D points and put them into an array ordered based on 3D
   % model part names
