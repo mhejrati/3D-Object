@@ -8,7 +8,7 @@ function test_model_bbox(model_2d, model_3d, test, ...
     load(fullfile(dir_name,'all_boxes.mat'));
   catch
     n_test = length(test);
-    parfor i = 1:n_test
+    for i = 1:n_test
       im = imread(test(i).im);
       fprintf('Testing: %d/%d\n',i,n_test);
       if ~exist(fullfile(dir_name, [num2str(i) '_boxes.mat']),'file')

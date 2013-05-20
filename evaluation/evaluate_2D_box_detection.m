@@ -12,15 +12,15 @@ function result = evaluate_2D_box_detection(test,experiment_name, experiment_nam
   for i = 1:length(test)
     tnames{i} = test(i).im;
   end
-  [names,a,b] = unique(tnames);
+  [names,uids,b] = unique(tnames);
   
   
-  for i = 1:length(a)
+  for i = 1:length(uids)
     fprintf('Reading detections for %d image.\n',i)
-    ttest = test(a(i));
+    ttest = test(uids(i));
     im = imread(ttest.im);
     [ymx,xmx,c] = size(im);
-    load(fullfile(dir_name, [num2str(a(i)) '_boxes.mat']))
+    load(fullfile(dir_name, [num2str(uids(i)) '_boxes.mat']))
     detection = nms(detection,overlap,do_clip,xmx,ymx);
     for j = 1:length(detection)
       cnt = cnt+1;
@@ -39,4 +39,4 @@ function result = evaluate_2D_box_detection(test,experiment_name, experiment_nam
 
   % evaluate detections
   params.min_overlap = overlap;
-  result = eval_detection(test(a),detections,params);
+  result = eval_detection(test(uids),detections,params);

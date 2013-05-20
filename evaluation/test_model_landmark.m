@@ -2,7 +2,7 @@ function test_model_landmark(model_2d, model_3d, test, ...
                                     experiment_name, experiment_name_suffix)
   
   globals;
-  dir_name = fullfile(cachedir,'detections_given_bbox_', [experiment_name '_' experiment_name_suffix]);
+  dir_name = fullfile(cachedir,'detections_given_bbox', [experiment_name '_' experiment_name_suffix]);
   mkdir(dir_name)
   model_2d.thresh = -2;
   overlap = .5;

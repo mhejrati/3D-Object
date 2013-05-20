@@ -39,38 +39,32 @@ function [model_3d, pos, test] = train_3d_model(pos, test, n_basis, experiment_n
 
     save([cachedir cls],'model_3d');
   end
-  
-%   for i = 1:n_pos
-%     tmp_3d_point = point_3d([i i+n_pos i+n_pos*2],:);
-%     pos(i).point_3D = tmp_3d_point';
-%     pos(i).rotation = rotations{i};
-%     pos(i).translation = translations(i,:);
-%     pos(i).basis_coefficient = basis_coefficients(i,:);
-%   end
 
   max_em_iter = 50;
   % Add 3D shape to positive images using ground truth landmark detections
-  pos = reorder_points(pos, model_3d.part_names);
-  for i = 1:length(pos)
-    tmp_3d = detect_3D(pos(i).point, model_3d, tol, max_em_iter);
-    pos(i).point_3D = tmp_3d.point_3D;
-    pos(i).rotation = tmp_3d.rotation;
-    pos(i).translation = tmp_3d.translation;
-    pos(i).basis_coefficient = tmp_3d.basis_coefficient;
-    fprintf('3D reconstruction: train image %d \n', i);
-  end
+  pos = detect_3D(pos, model_3d, tol, max_em_iter);
+%   pos = reorder_points(pos, model_3d.part_names);
+%   for i = 1:length(pos)
+%     tmp_3d = detect_3D(pos(i).point, model_3d, tol, max_em_iter);
+%     pos(i).point_3D = tmp_3d.point_3D;
+%     pos(i).rotation = tmp_3d.rotation;
+%     pos(i).translation = tmp_3d.translation;
+%     pos(i).basis_coefficient = tmp_3d.basis_coefficient;
+%     fprintf('3D reconstruction: train image %d \n', i);
+%   end
   
   
   % Add 3D shape to test images using ground truth landmark detections
-  test = reorder_points(test, model_3d.part_names);
-  for i = 1:length(test)
-    tmp_3d = detect_3D(test(i).point, model_3d, tol, max_em_iter);
-    test(i).point_3D = tmp_3d.point_3D;
-    test(i).rotation = tmp_3d.rotation;
-    test(i).translation = tmp_3d.translation;
-    test(i).basis_coefficient = tmp_3d.basis_coefficient;
-    fprintf('3D reconstruction: test image %d \n', i);
-  end
+  test = detect_3D(test, model_3d, tol, max_em_iter);
+%   test = reorder_points(test, model_3d.part_names);
+%   for i = 1:length(test)
+%     tmp_3d = detect_3D(test(i).point, model_3d, tol, max_em_iter);
+%     test(i).point_3D = tmp_3d.point_3D;
+%     test(i).rotation = tmp_3d.rotation;
+%     test(i).translation = tmp_3d.translation;
+%     test(i).basis_coefficient = tmp_3d.basis_coefficient;
+%     fprintf('3D reconstruction: test image %d \n', i);
+%   end
   
   
 % compute 2D points and put them into an array ordered based on 3D
