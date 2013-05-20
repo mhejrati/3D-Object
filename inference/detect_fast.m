@@ -53,9 +53,12 @@ function detections = detect_fast(im, model, thresh, just_max)
         h = fspecial('gaussian', 4, 4);
         [Y,X] = find(imregionalmax(imfilter(rscore,h,'same'),8) & (rscore >= thresh));
       else
-        [Y,X] = find(rscore >= thresh);
+        h = fspecial('gaussian', 5, 5);
+        tmp_thresh = -2;
+        [Y,X] = find((rscore >= thresh) | (imregionalmax(imfilter(rscore,h,'same'),8) & (rscore >= tmp_thresh)));
       end
       
+      % Walk back down tree following pointers, VECTORIZED BACKTRACK
       if length(X) > 0,
         I   = (X-1)*size(rscore,1) + Y;
         box = backtrack(X,Y,Ik(I),parts,pyra);
@@ -74,7 +77,7 @@ function detections = detect_fast(im, model, thresh, just_max)
         fprintf('%d detection processed at level=%d and c=%d \n',cnt,rlevel,c);
       end
       
-%       % Walk back down tree following pointers
+%       % Walk back down tree following pointers, NORMAL BACKTRACK
 %       for i = 1:length(X)
 %         x = X(i);
 %         y = Y(i);
@@ -223,7 +226,7 @@ function [score,Ix,Iy,Ik] = passmsg(child,parent)
 %   end
   
   
-  % Backtrack through DP msgs to collect ptrs to part locations
+  % Backtrack through DP msgs to collect ptrs to part locations, VECTORIZED
 function box = backtrack(x,y,mix,parts,pyra)
   numx     = length(x);
   numparts = length(parts);

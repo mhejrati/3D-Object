@@ -1,8 +1,8 @@
-function detections = detect_max(im, model, annotation, overlap)
+function detections = detect_max(im, model, annotation, overlap, thresh)
   
   % First run detection for the image using a low threshold
   model.interval = 10;
-  detections = detect_fast(im, model, -1.5, true);
+  detections = detect_fast(im, model, thresh, true);
   
   % Keep detections with sufficient overlap
   detections = bestoverlap(detections, annotation, overlap);  
@@ -44,3 +44,8 @@ function detections = bestoverlap(detections, annotation, overlap)
 
   I = o > overlap;
   detections = detections(I);
+  
+  o = o(I);
+  for i = 1:length(detections)
+    detections(i).overlap = o(i);
+  end

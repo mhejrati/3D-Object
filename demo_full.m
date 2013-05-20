@@ -70,18 +70,24 @@ visualize_3D_basis_shapes(model_3d, wireframe)
 
 % ---------------
 % Testing
-model_2d.thresh = -1;
-test_model(model_2d, model_3d, test, experiment_name, experiment_name_suffix);
+model_2d.thresh = -1.5;
 
+% Detect bounding boxes - for AP evaluation
+test_model_bbox(model_2d, model_3d, test, experiment_name, experiment_name_suffix);
+
+% Detect landmarks given ground-truth boudning box - for landmark
+% localization and viewpoint classification evaluation
+test_model_landmark(model_2d, model_3d, test, experiment_name, experiment_name_suffix);
 
 % ---------------
 % Evaluation
 
 % Evaluate 2D bounding bounding box detection using VOC PASCAL object
 % detection challenge method
-result = evaluate_2D_box_detection(test, experiment_name, experiment_name_suffix);
+ap_result = evaluate_2D_box_detection(test, experiment_name, experiment_name_suffix);
 
 % Evaluate 2D landmark localization and visibility prediction
+lp_result = evaluate_landmark_localization(test, experiment_name, experiment_name_suffix);
 
 % Evaluate viewpoint estimation
 

@@ -25,5 +25,5 @@ im = imread('car.png');
 
 model_2d.interval = 10;
 detection = detect_object(im, model_2d, model_3d, model_2d.thresh);
-detection = nms(detection,overlap,xmx,ymx);
+detection = nms(detection,overlap,1,xmx,ymx);
 visualize_detected_landmarks(im, model_2d, detection(1))

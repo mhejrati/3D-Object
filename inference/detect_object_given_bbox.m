@@ -1,12 +1,12 @@
 % Perform 2D and 3D detection on an image, the 2D and 3D models should be
 % for the same object
-function detections = detect_object(im, model_2d, model_3d, thresh_2d)
+function detections = detect_object_given_bbox(im, model_2d, model_3d, annotation, overlap)
   max_em_iter = 50;
   tol = 1;
   part_names = model_3d.part_names;
   
   % run 2D detector
-  detections = detect_fast(im, model_2d, thresh_2d, true);
+  detections = detect_max(im, model_2d, annotation, overlap, model_2d.thresh);
   
   % compute 2D points and put them into an array ordered based on 3D
   % model part names
