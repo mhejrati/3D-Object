@@ -11,7 +11,7 @@ function detection = detect_3D(points, model_3d, tol, max_em_iter)
     
     start_ids = 1:1000:length(detection);
     if length(detection)>start_ids(end)-1
-      start_ids(end+1) = length(detection);
+      start_ids(end+1) = length(detection)+1;
     end
     for j = 1:length(start_ids)-1
       tmp_ids = start_ids(j):start_ids(j+1)-1;
