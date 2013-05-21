@@ -120,8 +120,9 @@ function result = eval_detection(test_set,detections,params)
       c = 'b';
     end
     % plot precision/recall
+    hold on;
     plot(rec,prec,'-','color',c);
-    grid;
+    grid on;
     xlabel 'recall'
     ylabel 'precision'
     axis([0 1 0 1]);

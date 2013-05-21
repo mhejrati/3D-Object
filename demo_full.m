@@ -87,7 +87,7 @@ test_model_landmark(model_2d, model_3d, test, experiment_name, experiment_name_s
 ap_result = evaluate_2D_box_detection(test, experiment_name, experiment_name_suffix);
 
 % Evaluate 2D landmark localization and visibility prediction
-lp_result = evaluate_landmark_localization(test, experiment_name, experiment_name_suffix);
+lp_result = evaluate_Landmarks(test, model_2d, experiment_name, experiment_name_suffix);
 
 % Evaluate viewpoint estimation
 
