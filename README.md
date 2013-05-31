@@ -1,6 +1,6 @@
 ## 3D Object Detection and Reconstruction in Cluttered Images
 
-This is the code for the method described in
+This is the code for the method described in:
 
 [Analyzing 3D Objects in Cluttered Images, M. Hejrati, D. Ramanan.](http://www.ics.uci.edu/~shejrati/files/car.pdf)
 
