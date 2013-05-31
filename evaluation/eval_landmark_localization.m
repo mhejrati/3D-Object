@@ -62,7 +62,7 @@ function result = eval_landmark_localization(test_set,detections,model, params)
     cnt = cnt+npoints;
   end
   
-  dists = sum(((points-gt_points)./repmat(part_size',[1 2])).^2,2);
+  dists = (sum(((points-gt_points)./repmat(part_size',[1 2])).^2,2)).^0.5;
   
   % Landmark Localization error for all points
   subplot(1,3,1)
