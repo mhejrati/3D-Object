@@ -13,11 +13,11 @@ This library is written in Matlab, and is based on the following two works:
 
 ---- 
 
-## MATLAB quick start guide
+## Quick start guide
 
 This code is tested on Linux. Also pre-compiled Mex files for Linux is inlcuded.
 
-## Download and compile
+### Download and compile
 ``` sh
 $ cd ~/
 $ git clone git://github.com/mhejrati/3D-Object.git
@@ -26,21 +26,21 @@ $ matlab
 >> compile
 ```
 
-## Run detection demo using pre-trained model
+### Run detection demo using pre-trained model
 ``` sh
 $ cd ~/3D-Object/
 $ matlab
 >> demo_detection
 ```
 
-## Run full demo inlcuding learning, testing and evaluation
+### Run full demo inlcuding learning, testing and evaluation
 ``` sh
 $ cd ~/3D-Object/
 $ matlab
 >> demo_full
 ```
 
-## Prerequsite: Install PASCAL VOC 2011 trainval and development kit
+### Prerequsite: Install PASCAL VOC 2011 trainval and development kit
 ``` sh
 $ mkdir ~/data/VOC/  #Make a directory for the PASCAL VOC data
 $ cd ~/data/VOC
@@ -54,7 +54,7 @@ You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.so
 
 ## Issues, Questions, Congratulations, etc
 
-You can report issues here on the github page or contact "shejrati @ ics.uci.edu"
+Please report issues here on the github page or contact "shejrati @ ics.uci.edu"
 
 --- 
 **Copyright (C) 2013 Mohsen Hejrati, Deva Ramanan**
