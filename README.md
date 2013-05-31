@@ -1,17 +1,19 @@
-# 3D Object Detection and Reconstruction in Cluttered Images
+## 3D Object Detection and Reconstruction in Cluttered Images
 
-This is the code for the method described in 
+This is the code for the method described in
+
 [Analyzing 3D Objects in Cluttered Images, M. Hejrati, D. Ramanan.](http://www.ics.uci.edu/~shejrati/files/car.pdf)
+
 Neural Info. Proc. Systems (NIPS), Lake Tahoe, NV, Dec 2012.
 
-This library is written in Matlab, and is based on the following two codes:
+This library is written in Matlab, and is based on the following two works:
 * [Articluated Pose Estimation with Flexible Mixtures of Parts](http://www.ics.uci.edu/~dramanan/software/pose/)
 * [Learning Non-Rigid 3D Shape from 2D Motion] (http://movement.stanford.edu/learning-nr-shape/)
 
 
 ---- 
 
-# MATLAB quick start guide
+## MATLAB quick start guide
 
 This code is tested on Linux. Also pre-compiled Mex files for Linux is inlcuded.
 
@@ -38,7 +40,7 @@ $ matlab
 >> demo_full
 ```
 
-# Prerequsite: Install PASCAL VOC 2011 trainval and development kit
+## Prerequsite: Install PASCAL VOC 2011 trainval and development kit
 ``` sh
 $ mkdir ~/data/VOC/  #Make a directory for the PASCAL VOC data
 $ cd ~/data/VOC
@@ -47,10 +49,10 @@ $ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCdevkit_25-May-
 $ tar xf VOCtrainval_25-May-2011.tar
 $ tar xf VOCdevkit_25-May-2011.tar 
 ``` 
-You can also get the VOC dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/#data).
+You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/#data).
 
 
-# Issues, Questions, Congratulations, etc
+## Issues, Questions, Congratulations, etc
 
 You can report issues here on the github page or contact "shejrati @ ics.uci.edu"
 
