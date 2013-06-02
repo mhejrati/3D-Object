@@ -1,4 +1,4 @@
-## 3D Object Detection and Reconstruction in Cluttered Images
+## 3D Object Detection and Reconstruction
 
 This is the code for the method described in:
 
@@ -42,7 +42,7 @@ $ matlab
 
 ### Prerequsite: Install PASCAL VOC 2011 trainval and development kit
 ``` sh
-$ mkdir ~/data/VOC/VOC2011/  #Make a directory for the PASCAL VOC data
+$ mkdir ~/data/VOC/VOC2011/
 $ cd ~/data/VOC/VOC2011/
 $ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCtrainval_25-May-2011.tar
 $ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCdevkit_25-May-2011.tar
@@ -50,14 +50,15 @@ $ tar xf VOCtrainval_25-May-2011.tar
 $ tar xf VOCdevkit_25-May-2011.tar
 $ mv TrainVal/VOCdevkit/VOC2011 VOCdevkit
 ``` 
-You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/#data).
+You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011).
 
+----
 
-## Issues, Questions, Congratulations, etc
+### Issues, Questions, Congratulations, etc
 
 Please report issues here on the github page or contact "shejrati @ ics.uci.edu"
 
---- 
+--- -
 **Copyright (C) 2013 Mohsen Hejrati, Deva Ramanan**
 
 Permission is hereby granted, free of charge, to any person obtaining
