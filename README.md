@@ -17,6 +17,19 @@ This library is written in Matlab, and is based on the following two works:
 
 This code is tested on Linux. Also pre-compiled Mex files for Linux is inlcuded.
 
+### Prerequsite: Install PASCAL VOC 2011 trainval and development kit
+``` sh
+$ mkdir ~/data/VOC/VOC2011/
+$ cd ~/data/VOC/VOC2011/
+$ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCtrainval_25-May-2011.tar
+$ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCdevkit_25-May-2011.tar
+$ tar xf VOCtrainval_25-May-2011.tar
+$ tar xf VOCdevkit_25-May-2011.tar
+$ mv TrainVal/VOCdevkit/VOC2011 VOCdevkit
+``` 
+You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011).
+
+
 ### Download and compile
 ``` sh
 $ cd ~/
@@ -40,17 +53,7 @@ $ matlab
 >> demo_full
 ```
 
-### Prerequsite: Install PASCAL VOC 2011 trainval and development kit
-``` sh
-$ mkdir ~/data/VOC/VOC2011/
-$ cd ~/data/VOC/VOC2011/
-$ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCtrainval_25-May-2011.tar
-$ wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011/VOCdevkit_25-May-2011.tar
-$ tar xf VOCtrainval_25-May-2011.tar
-$ tar xf VOCdevkit_25-May-2011.tar
-$ mv TrainVal/VOCdevkit/VOC2011 VOCdevkit
-``` 
-You can also get the VOC PASCAL 2011 dataset from [HERE](http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2011).
+
 
 ----
 
