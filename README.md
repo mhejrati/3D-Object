@@ -15,7 +15,7 @@ This library is written in Matlab, and is based on the following two works:
 
 ## Quick start guide
 
-This code is tested on Linux. Also pre-compiled Mex files for Linux is inlcuded.
+This code is tested on Linux. Pre-compiled Mex files for linux are inlcuded.
 
 ### Prerequsite: Install PASCAL VOC 2011 trainval and development kit
 ``` sh
