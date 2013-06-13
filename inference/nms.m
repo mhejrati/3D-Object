@@ -28,7 +28,7 @@ end
 sc = zeros(1,length(detections));
 for d = 1:length(detections)
   sc(d) = detections(d).(params.score_name);
-  detections(d).score = detections(d).(params.score_name);
+  %detections(d).score = detections(d).(params.score_name);
   %sc(d) = detections(d).score;
 end
 

@@ -24,7 +24,7 @@ function result = eval_detection(test_set,detections,params)
   for i = 1:n_det
     [pathstr, name, ext, versn] = fileparts(detections(i).im);
     det_names{i} = name;
-    sc(i) = detections(i).score;
+    sc(i) = detections(i).(params.score_name);
     ind = VOChash_lookup(hash,det_names{i});
     det_ids{i} = ind;
   end
